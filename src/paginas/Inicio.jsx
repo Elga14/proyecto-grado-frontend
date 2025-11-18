@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { Container, Card, Alert, Spinner } from "react-bootstrap";
 
 function Inicio() {
   const [usuario, setUsuario] = useState(null);
   const [mensaje, setMensaje] = useState("");
+  const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
     const obtenerPerfil = async () => {
@@ -10,6 +12,7 @@ function Inicio() {
 
       if (!token) {
         setMensaje("No tienes acceso. Inicia sesión.");
+        setCargando(false);
         return;
       }
 
@@ -22,35 +25,57 @@ function Inicio() {
 
         if (!respuesta.ok) {
           setMensaje(datos.mensaje || "Acceso no autorizado");
+          setCargando(false);
           return;
         }
 
         setUsuario(datos.datos);
-
-        }
-        catch (error) {
+      } catch (error) {
         console.error("Error en la solicitud:", error);
         setMensaje("Error al comunicarse con el servidor");
-      }  
+      }
 
+      setCargando(false);
     };
 
     obtenerPerfil();
   }, []);
 
   return (
-    <div>
-        <h1>Bienvenido a la página de inicio</h1>
+    <Container className="d-flex justify-content-center align-items-center vh-100">
+      <Card style={{ width: "450px" }} className="shadow p-4">
 
-      {mensaje && <p>{mensaje}</p>}
+        <h2 className="text-center mb-4">Página de Inicio</h2>
 
-      {usuario && (
-        <div>
-          <h3>Bienvenido, {usuario.nombre}</h3>
-          <p>Correo: {usuario.correo}</p>
-        </div>
-      )}
-    </div>
+        {/* Mensaje de carga */}
+        {cargando && (
+          <div className="text-center mb-3">
+            <Spinner animation="border" role="status" />
+            <p className="mt-2">Cargando información...</p>
+          </div>
+        )}
+
+        {/* Mensajes de error */}
+        {!cargando && mensaje && (
+          <Alert variant="danger" className="text-center">
+            {mensaje}
+          </Alert>
+        )}
+
+        {/* Información del usuario */}
+        {usuario && (
+          <div>
+            <Alert variant="success" className="text-center">
+              ¡Bienvenido, {usuario.nombre}!
+            </Alert>
+
+            <p><strong>Correo:</strong> {usuario.correo}</p>
+            <p><strong>Rol:</strong> {usuario.rol}</p>
+          </div>
+        )}
+
+      </Card>
+    </Container>
   );
 }
 

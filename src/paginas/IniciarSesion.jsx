@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Form, Button, Card, Alert, Container } from "react-bootstrap";
 
 function IniciarSesion() {
   const [correo, setCorreo] = useState("");
@@ -27,12 +28,10 @@ function IniciarSesion() {
         return setMensaje(datos.mensaje || "Error al iniciar sesión");
       }
 
-      // Guardar token en el navegador
       localStorage.setItem("token", datos.token);
 
       setMensaje("Inicio de sesión exitoso");
 
-      // Redirigir a la página de inicio
       navegar("/inicio");
 
     } catch (error) {
@@ -42,31 +41,56 @@ function IniciarSesion() {
   };
 
   return (
-    <div>
-      <h2>Iniciar Sesión</h2>
+    <Container className="d-flex justify-content-center align-items-center vh-100">
+      <Card style={{ width: "380px" }} className="shadow p-4">
+        <h3 className="text-center mb-4">Iniciar Sesión</h3>
 
-      <form onSubmit={manejarLogin}>
-        <input
-          type="email"
-          placeholder="Correo electrónico"
-          value={correo}
-          onChange={(e) => setCorreo(e.target.value)}
-          required
-        />
+        {mensaje && (
+          <Alert variant={mensaje.includes("exitoso") ? "success" : "danger"}>
+            {mensaje}
+          </Alert>
+        )}
 
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={contraseña}
-          onChange={(e) => setContraseña(e.target.value)}
-          required
-        />
+        <Form onSubmit={manejarLogin}>
+          <Form.Group className="mb-3">
+            <Form.Label>Correo electrónico</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Ingresa tu correo"
+              value={correo}
+              onChange={(e) => setCorreo(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-        <button type="submit">Ingresar</button>
-      </form>
+          <Form.Group className="mb-3">
+            <Form.Label>Contraseña</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Ingresa tu contraseña"
+              value={contraseña}
+              onChange={(e) => setContraseña(e.target.value)}
+              required
+            />
+          </Form.Group>
 
-      {mensaje && <p>{mensaje}</p>}
-    </div>
+          <Button
+            variant="primary"
+            type="submit"
+            className="w-100 mt-2"
+          >
+            Ingresar
+          </Button>
+        </Form>
+
+        <p className="text-center mt-3">
+          ¿No tienes cuenta?{" "}
+          <a href="/registro" className="text-decoration-none">
+            Regístrate aquí
+          </a>
+        </p>
+      </Card>
+    </Container>
   );
 }
 

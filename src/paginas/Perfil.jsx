@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Container, Card, Spinner, Alert } from "react-bootstrap";
 
 function Perfil() {
   const [datos, setDatos] = useState(null);
@@ -37,16 +38,35 @@ function Perfil() {
     obtenerPerfil();
   }, [token]);
 
-  if (cargando) return <p>Cargando perfil...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (cargando)
+    return (
+      <Container className="mt-5 text-center">
+        <Spinner animation="border" />
+        <p className="mt-2">Cargando perfil...</p>
+      </Container>
+    );
+
+  if (error)
+    return (
+      <Container className="mt-5">
+        <Alert variant="danger">{error}</Alert>
+      </Container>
+    );
 
   return (
-    <div>
-      <h2>Perfil del Usuario</h2>
-      <p><strong>Nombre:</strong> {datos.nombre}</p>
-      <p><strong>Correo:</strong> {datos.correo}</p>
-      <p><strong>Rol:</strong> {datos.rol}</p>
-    </div>
+    <Container className="mt-5 d-flex justify-content-center">
+      <Card style={{ width: "28rem" }} className="shadow">
+        <Card.Body>
+          <Card.Title className="text-center mb-4">
+            <h2>Perfil del Usuario</h2>
+          </Card.Title>
+
+          <p><strong>Nombre:</strong> {datos.nombre}</p>
+          <p><strong>Correo:</strong> {datos.correo}</p>
+          <p><strong>Rol:</strong> {datos.rol}</p>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }
 
