@@ -27,6 +27,7 @@ function Perfil() {
         }
 
         setDatos(resultado.datos);
+        
       } catch (error) {
         console.error("Error obteniendo perfil:", error);
         setError("No se pudo obtener el perfil.");

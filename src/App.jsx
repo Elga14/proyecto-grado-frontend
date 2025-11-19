@@ -4,8 +4,11 @@ import Registro from "./paginas/Registro";
 import Inicio from "./paginas/Inicio";
 import Perfil from "./paginas/Perfil";
 import BarraNavegacion from "./componentes/BarraNavegacion";
+import PanelAdministrador from "./paginas/PanelAdministrador"; // ✔ nombre correcto
 
-// Componente envoltorio para permitir useLocation()
+// =========================================
+// Envoltorio necesario para permitir useLocation()
+// =========================================
 function AppWrapper() {
   return (
     <Router>
@@ -17,19 +20,39 @@ function AppWrapper() {
 function App() {
   const location = useLocation();
 
+  // ------------------------------------------
   // Verificar si el usuario está autenticado
+  // ------------------------------------------
   const isAuthenticated = () => localStorage.getItem("token") !== null;
 
+  // ------------------------------------------
+  // Obtener el rol desde el token guardado
+  // ------------------------------------------
+  const obtenerRol = () => {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.rol; // "admin" o "usuario"
+    } catch {
+      return null;
+    }
+  };
+
+  const rol = obtenerRol();
+
+  // ------------------------------------------
   // Rutas donde NO debe aparecer la barra
+  // ------------------------------------------
   const rutasSinBarra = ["/iniciar-sesion", "/registro"];
 
-  // ¿La ruta actual está en la lista de rutas sin barra?
   const ocultarBarra = rutasSinBarra.includes(location.pathname);
 
   return (
     <>
-      {/* Mostrar barra solo si está autenticado y no estamos en login o registro */}
-      {isAuthenticated() && !ocultarBarra && <BarraNavegacion />}
+      {/* Barra visible SOLO si hay sesión y no estamos en login/registro */}
+      {isAuthenticated() && !ocultarBarra && <BarraNavegacion rol={rol} />}
 
       <Routes>
         <Route path="/iniciar-sesion" element={<IniciarSesion />} />
@@ -43,6 +66,18 @@ function App() {
         <Route
           path="/perfil"
           element={isAuthenticated() ? <Perfil /> : <Navigate to="/iniciar-sesion" />}
+        />
+
+        {/* =============================
+            RUTA PROTEGIDA PARA ADMIN
+           ============================= */}
+        <Route
+          path="/admin"
+          element={
+            isAuthenticated() && rol === "admin"
+              ? <PanelAdministrador />
+              : <Navigate to="/inicio" />
+          }
         />
 
         <Route path="*" element={<Navigate to="/iniciar-sesion" />} />
