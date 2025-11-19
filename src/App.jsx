@@ -1,44 +1,54 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import IniciarSesion from "./paginas/IniciarSesion";
 import Registro from "./paginas/Registro";
 import Inicio from "./paginas/Inicio";
 import Perfil from "./paginas/Perfil";
+import BarraNavegacion from "./componentes/BarraNavegacion";
 
-function App() {
-
-  // Verificar si el usuario tiene un token (autenticado)
-  const isAuthenticated = () => {
-    return localStorage.getItem("token") !== null;
-  };
-
+// Componente envoltorio para permitir useLocation()
+function AppWrapper() {
   return (
     <Router>
+      <App />
+    </Router>
+  );
+}
+
+function App() {
+  const location = useLocation();
+
+  // Verificar si el usuario está autenticado
+  const isAuthenticated = () => localStorage.getItem("token") !== null;
+
+  // Rutas donde NO debe aparecer la barra
+  const rutasSinBarra = ["/iniciar-sesion", "/registro"];
+
+  // ¿La ruta actual está en la lista de rutas sin barra?
+  const ocultarBarra = rutasSinBarra.includes(location.pathname);
+
+  return (
+    <>
+      {/* Mostrar barra solo si está autenticado y no estamos en login o registro */}
+      {isAuthenticated() && !ocultarBarra && <BarraNavegacion />}
+
       <Routes>
-
-        {/* Página de inicio de sesión */}
         <Route path="/iniciar-sesion" element={<IniciarSesion />} />
-
-        {/* Página de registro */}
         <Route path="/registro" element={<Registro />} />
 
-        {/* RUTA PROTEGIDA → solo entra si ha iniciado sesión */}
         <Route
           path="/inicio"
           element={isAuthenticated() ? <Inicio /> : <Navigate to="/iniciar-sesion" />}
         />
 
-        {/* Perfil también protegido */}
         <Route
           path="/perfil"
           element={isAuthenticated() ? <Perfil /> : <Navigate to="/iniciar-sesion" />}
         />
 
-        {/* Redirección inicial */}
         <Route path="*" element={<Navigate to="/iniciar-sesion" />} />
-
       </Routes>
-    </Router>
+    </>
   );
 }
 
-export default App;
+export default AppWrapper;
