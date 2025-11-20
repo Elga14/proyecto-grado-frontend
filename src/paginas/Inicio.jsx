@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import { Container, Card, Alert, Spinner } from "react-bootstrap";
+import { Container, Alert, Spinner } from "react-bootstrap";
+import TarjetaCurso from "../componentes/TarjetaCurso";
 
 function Inicio() {
   const [usuario, setUsuario] = useState(null);
+  const [cursos, setCursos] = useState([]);
   const [mensaje, setMensaje] = useState("");
   const [cargando, setCargando] = useState(true);
+  const [cargandoCursos, setCargandoCursos] = useState(true);
 
+  // Obtener perfil del usuario
   useEffect(() => {
     const obtenerPerfil = async () => {
       const token = localStorage.getItem("token");
@@ -29,7 +33,6 @@ function Inicio() {
           return;
         }
 
-        // Ajuste importante: usar la propiedad correcta devuelta por el backend
         setUsuario(datos.usuario || null);
       } catch (error) {
         console.error("Error en la solicitud:", error);
@@ -42,12 +45,32 @@ function Inicio() {
     obtenerPerfil();
   }, []);
 
+  // Obtener cursos disponibles
+  useEffect(() => {
+    const obtenerCursos = async () => {
+      try {
+        const respuesta = await fetch("http://localhost:5000/api/cursos");
+        const datos = await respuesta.json();
+
+        if (respuesta.ok) {
+          setCursos(datos);
+        } else {
+          console.error("Error al obtener cursos");
+        }
+      } catch (error) {
+        console.error("Error al cargar cursos:", error);
+      } finally {
+        setCargandoCursos(false);
+      }
+    };
+
+    obtenerCursos();
+  }, []);
+
   return (
-    <Container className="d-flex justify-content-center align-items-center vh-100">
-      <Card style={{ width: "450px" }} className="shadow p-4">
-
-        <h2 className="text-center mb-4">Página de Inicio</h2>
-
+    <Container className="py-5">
+      {/* Sección de bienvenida */}
+      <div className="mb-5">
         {/* Mensaje de carga */}
         {cargando && (
           <div className="text-center mb-3">
@@ -63,18 +86,45 @@ function Inicio() {
           </Alert>
         )}
 
-        {/* Información del usuario */}
+        {/* Saludo al usuario */}
         {!cargando && usuario && usuario.nombre && (
-          <div>
-            <Alert variant="success" className="text-center">
-              ¡Bienvenido, {usuario.nombre}!
-            </Alert>
-            <p><strong>Correo:</strong> {usuario.correo}</p>
-            <p><strong>Rol:</strong> {usuario.rol}</p>
+          <div className="text-center mb-4">
+            <h1 className="display-5 fw-bold">¡Bienvenido, {usuario.nombre}! 👋</h1>
+            <p className="text-muted">Explora nuestros cursos disponibles</p>
+          </div>
+        )}
+      </div>
+
+      {/* Sección de cursos */}
+      <div>
+        <h2 className="mb-4 fw-bold">Cursos Disponibles</h2>
+
+        {/* Spinner de carga de cursos */}
+        {cargandoCursos && (
+          <div className="text-center my-5">
+            <Spinner animation="border" role="status" />
+            <p className="mt-2">Cargando cursos...</p>
           </div>
         )}
 
-      </Card>
+        {/* Grid de cursos */}
+        {!cargandoCursos && cursos.length > 0 && (
+          <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {cursos.map((curso) => (
+              <div className="col" key={curso._id}>
+                <TarjetaCurso curso={curso} />
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Mensaje si no hay cursos */}
+        {!cargandoCursos && cursos.length === 0 && (
+          <Alert variant="info" className="text-center">
+            No hay cursos disponibles en este momento.
+          </Alert>
+        )}
+      </div>
     </Container>
   );
 }

@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "r
 import IniciarSesion from "./paginas/IniciarSesion";
 import Registro from "./paginas/Registro";
 import Inicio from "./paginas/Inicio";
-import Perfil from "./paginas/Perfil";
 import BarraNavegacion from "./componentes/BarraNavegacion";
 import PanelAdministrador from "./paginas/PanelAdministrador";
 import DetallesCurso from "./paginas/DetallesCurso";
@@ -64,11 +63,6 @@ function App() {
           element={isAuthenticated() ? <Inicio /> : <Navigate to="/iniciar-sesion" />}
         />
 
-        <Route
-          path="/perfil"
-          element={isAuthenticated() ? <Perfil /> : <Navigate to="/iniciar-sesion" />}
-        />
-
         {/* =============================
             RUTA PROTEGIDA PARA ADMIN
            ============================= */}
@@ -85,7 +79,7 @@ function App() {
               DETALLES DEL CURSO
            ============================= */}
         <Route
-          path="/cursos/:id"
+          path="/curso/:id"
           element={<DetallesCurso />}
         />
 
