@@ -5,10 +5,9 @@ import Inicio from "./paginas/Inicio";
 import BarraNavegacion from "./componentes/BarraNavegacion";
 import PanelAdministrador from "./paginas/PanelAdministrador";
 import DetallesCurso from "./paginas/DetallesCurso";
+import AdministradorCursoContenido from "./paginas/AdministradorContenidoCurso";
 
-// =========================================
 // Envoltorio necesario para permitir useLocation()
-// =========================================
 function AppWrapper() {
   return (
     <Router>
@@ -46,12 +45,10 @@ function App() {
   // Rutas donde NO debe aparecer la barra
   // ------------------------------------------
   const rutasSinBarra = ["/iniciar-sesion", "/registro"];
-
   const ocultarBarra = rutasSinBarra.includes(location.pathname);
 
   return (
     <>
-      {/* Barra visible SOLO si hay sesión y no estamos en login/registro */}
       {isAuthenticated() && !ocultarBarra && <BarraNavegacion rol={rol} />}
 
       <Routes>
@@ -63,9 +60,6 @@ function App() {
           element={isAuthenticated() ? <Inicio /> : <Navigate to="/iniciar-sesion" />}
         />
 
-        {/* =============================
-            RUTA PROTEGIDA PARA ADMIN
-           ============================= */}
         <Route
           path="/admin"
           element={
@@ -75,13 +69,9 @@ function App() {
           }
         />
 
-        {/* =============================
-              DETALLES DEL CURSO
-           ============================= */}
-        <Route
-          path="/curso/:id"
-          element={<DetallesCurso />}
-        />
+        <Route path="/admin/curso-contenido/:cursoId" element={<AdministradorCursoContenido />} />
+
+        <Route path="/curso/:id" element={<DetallesCurso />} />
 
         <Route path="*" element={<Navigate to="/iniciar-sesion" />} />
       </Routes>

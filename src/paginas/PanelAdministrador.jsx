@@ -35,7 +35,9 @@ const PanelAdministrador = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
+  // ==========================================
   // Obtener todos los cursos
+  // ==========================================
   const obtenerCursos = async () => {
     try {
       const respuesta = await axios.get("http://localhost:5000/api/cursos");
@@ -48,7 +50,9 @@ const PanelAdministrador = () => {
     }
   };
 
+  // ==========================================
   // Crear curso
+  // ==========================================
   const crearCurso = async () => {
     try {
       await axios.post(
@@ -84,7 +88,9 @@ const PanelAdministrador = () => {
     }
   };
 
+  // ==========================================
   // Editar curso
+  // ==========================================
   const editarCurso = async () => {
     try {
       await axios.put(
@@ -110,7 +116,9 @@ const PanelAdministrador = () => {
     }
   };
 
+  // ==========================================
   // Eliminar curso
+  // ==========================================
   const eliminarCurso = async (id) => {
     if (!window.confirm("¿Seguro que deseas eliminar este curso?")) return;
     try {
@@ -133,6 +141,9 @@ const PanelAdministrador = () => {
     }
   };
 
+  // ==========================================
+  // Cargar cursos al iniciar
+  // ==========================================
   useEffect(() => {
     obtenerCursos();
   }, []);
@@ -200,7 +211,7 @@ const PanelAdministrador = () => {
                           variant="outline-primary"
                           size="sm"
                           className="me-2"
-                          onClick={() => navigate(`/admin/curso-contenido?curso=${curso._id}`)}
+                          onClick={() => navigate(`/admin/curso-contenido/${curso._id}`)}
                         >
                           Contenido
                         </Button>
