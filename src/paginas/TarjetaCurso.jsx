@@ -33,10 +33,10 @@ const TarjetaCurso = ({ curso }) => {
         {/* Información adicional */}
         <div className="mb-3">
           <small className="text-muted d-block">
-            <strong>📊 Nivel:</strong> {curso.nivel}
+            <strong>Nivel:</strong> {curso.nivel}
           </small>
           <small className="text-muted d-block">
-            <strong>⏱️ Duración:</strong> {curso.duracion}
+            <strong>Duración:</strong> {curso.duracion}
           </small>
         </div>
 

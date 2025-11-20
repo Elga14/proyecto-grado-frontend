@@ -33,7 +33,7 @@ function Inicio() {
       {/* Sección de bienvenida */}
       <div className="mb-5">
         <div className="text-center mb-4">
-          <h1 className="display-5 fw-bold">¡Bienvenido! 👋</h1>
+          <h1 className="display-5 fw-bold">¡Bienvenido! </h1>
           <p className="text-muted">Explora nuestros cursos disponibles</p>
         </div>
       </div>

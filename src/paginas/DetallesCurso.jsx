@@ -95,19 +95,19 @@ const DetallesCurso = () => {
           {/* Información del curso */}
           <div className="row mb-4">
             <div className="col-md-6">
-              <p><strong>📚 Categoría:</strong> {curso.categoria}</p>
-              <p><strong>📊 Nivel:</strong> {curso.nivel}</p>
+              <p><strong>Categoría:</strong> {curso.categoria}</p>
+              <p><strong>Nivel:</strong> {curso.nivel}</p>
             </div>
             <div className="col-md-6">
-              <p><strong>⏱️ Duración:</strong> {curso.duracion}</p>
-              <p><strong>💰 Precio:</strong> ${curso.precio}</p>
+              <p><strong>Duración:</strong> {curso.duracion}</p>
+              <p><strong>Precio:</strong> ${curso.precio}</p>
             </div>
           </div>
 
           {/* Información del instructor si existe */}
           {curso.instructor && (
             <div className="alert alert-info" role="alert">
-              <strong>👨‍🏫 Instructor:</strong> {curso.instructor.nombre} ({curso.instructor.email})
+              <strong>Instructor:</strong> {curso.instructor.nombre} ({curso.instructor.email})
             </div>
           )}
 
@@ -117,14 +117,14 @@ const DetallesCurso = () => {
               className="btn btn-dark btn-lg"
               onClick={() => navigate(`/curso/${id}/contenido`)}
             >
-              📖 Ver contenido del curso
+              Ver contenido del curso
             </button>
 
             <button
               className="btn btn-outline-secondary"
               onClick={() => navigate(-1)}
             >
-              ← Volver
+              Volver
             </button>
           </div>
         </div>
