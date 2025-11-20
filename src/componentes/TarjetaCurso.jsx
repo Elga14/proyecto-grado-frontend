@@ -8,8 +8,13 @@
 
 import React from "react";
 import { Card, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+
 
 function TarjetaCurso({ curso }) {
+  
+  const navigate = useNavigate();
+
   // Formatear precio como pesos colombianos (COP)
   const formatoPesos = (valor) => {
     return new Intl.NumberFormat("es-CO", {
@@ -54,7 +59,10 @@ function TarjetaCurso({ curso }) {
         <div className="d-flex justify-content-between align-items-center">
           <h6 className="fw-bold">{formatoPesos(curso.precio)}</h6>
 
-          <Button variant="dark">Ver curso</Button>
+          <Button variant="dark" onClick={() => navigate(`/curso/${curso._id}`)}>
+  Ver curso
+</Button>
+
         </div>
       </Card.Body>
     </Card>

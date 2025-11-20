@@ -4,7 +4,8 @@ import Registro from "./paginas/Registro";
 import Inicio from "./paginas/Inicio";
 import Perfil from "./paginas/Perfil";
 import BarraNavegacion from "./componentes/BarraNavegacion";
-import PanelAdministrador from "./paginas/PanelAdministrador"; // ✔ nombre correcto
+import PanelAdministrador from "./paginas/PanelAdministrador";
+import DetallesCurso from "./paginas/DetallesCurso";
 
 // =========================================
 // Envoltorio necesario para permitir useLocation()
@@ -78,6 +79,14 @@ function App() {
               ? <PanelAdministrador />
               : <Navigate to="/inicio" />
           }
+        />
+
+        {/* =============================
+              DETALLES DEL CURSO
+           ============================= */}
+        <Route
+          path="/cursos/:id"
+          element={<DetallesCurso />}
         />
 
         <Route path="*" element={<Navigate to="/iniciar-sesion" />} />
