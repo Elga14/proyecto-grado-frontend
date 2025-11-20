@@ -1,59 +1,56 @@
 import { useState } from "react";
-import { Form, Button, Card, Alert, Container } from "react-bootstrap";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import { Form, Button, Container, Card } from "react-bootstrap";
 
 function Registro() {
   const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [contraseña, setContraseña] = useState("");
-  const [mensaje, setMensaje] = useState("");
+  const [cargando, setCargando] = useState(false);
 
-  const manejarRegistro = async (e) => {
+  const navigate = useNavigate();
+
+  const manejarEnvio = async (e) => {
     e.preventDefault();
-    setMensaje("");
+    setCargando(true);
 
     try {
-      const respuesta = await fetch("http://localhost:5000/api/usuarios/registro", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nombre, correo, contraseña }),
-      });
+      const respuesta = await axios.post(
+        "http://localhost:5000/api/usuarios/registrar",
+        {
+          nombre,
+          correo,
+          contraseña,
+        }
+      );
 
-      const datos = await respuesta.json();
-
-      if (!respuesta.ok) {
-        return setMensaje(datos.mensaje || "Error al registrar usuario");
+      if (respuesta.status === 201) {
+        setTimeout(() => {
+          setCargando(false);
+          alert("✅ Registro exitoso. Ahora inicia sesión.");
+          navigate("/iniciar-sesion");
+        }, 2000);
       }
-
-      setMensaje("Usuario registrado correctamente");
-
-      // Resetear formulario
-      setNombre("");
-      setCorreo("");
-      setContraseña("");
-
     } catch (error) {
-      console.error(error);
-      setMensaje("Error al conectar con el servidor");
+      setCargando(false);
+      console.error("Error al registrar usuario:", error);
+      alert(error.response?.data?.mensaje || "Error al registrarse. Intenta nuevamente.");
     }
   };
 
   return (
     <Container className="d-flex justify-content-center align-items-center vh-100">
-      <Card style={{ width: "380px" }} className="shadow p-4">
-        <h3 className="text-center mb-4">Registro de Usuario</h3>
+      {cargando && <Loader />}
 
-        {mensaje && (
-          <Alert variant={mensaje.includes("correctamente") ? "success" : "danger"}>
-            {mensaje}
-          </Alert>
-        )}
+      <Card
+        className="p-4 shadow-lg bg-dark text-white text-center fade-in"
+        style={{ width: "22rem", borderRadius: "15px" }}
+      >
+        <h3 className="mb-4">Crear cuenta</h3>
 
-        <Form onSubmit={manejarRegistro}>
-
+        <Form onSubmit={manejarEnvio}>
           <Form.Group className="mb-3">
-            <Form.Label>Nombre completo</Form.Label>
             <Form.Control
               type="text"
               placeholder="Ingresa tu nombre"
@@ -64,7 +61,6 @@ function Registro() {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Correo electrónico</Form.Label>
             <Form.Control
               type="email"
               placeholder="Ingresa tu correo"
@@ -75,7 +71,6 @@ function Registro() {
           </Form.Group>
 
           <Form.Group className="mb-3">
-            <Form.Label>Contraseña</Form.Label>
             <Form.Control
               type="password"
               placeholder="Crea una contraseña"
@@ -85,19 +80,17 @@ function Registro() {
             />
           </Form.Group>
 
-          <Button variant="success" type="submit" className="w-100 mt-2">
+          <Button type="submit" className="w-100 mb-3" variant="light">
             Registrarme
           </Button>
-
         </Form>
 
-        <p className="text-center mt-3">
+        <p className="mt-2">
           ¿Ya tienes cuenta?{" "}
-          <a href="/iniciar-sesion" className="text-decoration-none">
+          <Link to="/iniciar-sesion" className="text-info text-decoration-none">
             Inicia sesión aquí
-          </a>
+          </Link>
         </p>
-
       </Card>
     </Container>
   );

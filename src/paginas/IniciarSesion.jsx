@@ -28,10 +28,18 @@ function IniciarSesion() {
         return setMensaje(datos.mensaje || "Error al iniciar sesión");
       }
 
-      localStorage.setItem("token", datos.token);
+      // Guardar solo si el backend responde correctamente
+      if (datos.token) {
+        localStorage.setItem("token", datos.token);
+      }
+
+      if (datos.usuario) {
+        localStorage.setItem("usuario", JSON.stringify(datos.usuario));
+      }
 
       setMensaje("Inicio de sesión exitoso");
 
+      // Redirige al usuario al inicio
       navegar("/inicio");
 
     } catch (error) {
