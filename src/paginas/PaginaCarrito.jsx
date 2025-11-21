@@ -79,7 +79,7 @@ const PaginaCarrito = () => {
 
       {exito && (
         <Alert variant="success" className="text-center">
-          ✅ ¡Compra realizada con éxito!
+           ¡Compra realizada con éxito!
         </Alert>
       )}
 

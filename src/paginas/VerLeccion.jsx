@@ -51,14 +51,16 @@ const VerLeccion = () => {
         <h2 className="fw-bold mb-3 text-center">{leccion.tituloLeccion}</h2>
 
         <div className="mt-4">
-          {leccion.tipo === "video" && (
+          {leccion.tipo === "video" && leccion.videoUrl && (
             <div className="ratio ratio-16x9 mb-3">
               <iframe
-                src={leccion.videoUrl.includes("youtube.com/watch")
-                  ? leccion.videoUrl.replace("watch?v=", "embed/")
-                  : leccion.videoUrl
+                src={
+                  leccion.videoUrl.includes("youtube.com/watch")
+                    ? leccion.videoUrl.replace("watch?v=", "embed/")
+                    : leccion.videoUrl
                 }
                 title={leccion.tituloLeccion}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               ></iframe>
             </div>
