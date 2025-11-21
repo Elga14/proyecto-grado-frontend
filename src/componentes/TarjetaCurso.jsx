@@ -1,40 +1,18 @@
-/**
- * TarjetaCurso.jsx
- *
- * Tarjeta visual para mostrar los cursos al usuario en el inicio.
- * Todo en español, manteniendo la lógica.
- */
-
-import React from "react";
+import React, { useContext } from "react";
 import { Card, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { ContextoCarrito } from "../paginas/ContextoCarrito.jsx";
 
 function TarjetaCurso({ curso }) {
-
   const navigate = useNavigate();
+  const { agregarAlCarrito } = useContext(ContextoCarrito);
 
-  // Formatear precio en pesos colombianos
   const formatoPesos = (valor) => {
     return new Intl.NumberFormat("es-CO", {
       style: "currency",
       currency: "COP",
       maximumFractionDigits: 0,
     }).format(valor);
-  };
-
-  // 👉 Agregar al carrito (guardado en localStorage)
-  const agregarCarrito = () => {
-    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-
-    // Evitar duplicados
-    const existe = carrito.find(item => item._id === curso._id);
-    if (!existe) {
-      carrito.push(curso);
-      localStorage.setItem("carrito", JSON.stringify(carrito));
-      alert("Curso agregado al carrito ✔️");
-    } else {
-      alert("Este curso ya está en el carrito.");
-    }
   };
 
   return (
@@ -63,21 +41,18 @@ function TarjetaCurso({ curso }) {
 
       <Card.Body>
         <Card.Title>{curso.titulo}</Card.Title>
-
         <Card.Text className="text-muted" style={{ minHeight: "70px" }}>
           {curso.descripcion?.slice(0, 100)}...
         </Card.Text>
 
         <div className="d-flex justify-content-between align-items-center">
           <h6 className="fw-bold">{formatoPesos(curso.precio)}</h6>
-
           <div className="d-flex gap-2">
             <Button variant="dark" onClick={() => navigate(`/curso/${curso._id}`)}>
               Ver curso
             </Button>
 
-            {/* 👉 Botón Agregar al carrito */}
-            <Button variant="success" onClick={agregarCarrito}>
+            <Button variant="success" onClick={() => agregarAlCarrito(curso)}>
               Agregar
             </Button>
           </div>

@@ -25,14 +25,18 @@ function IniciarSesion() {
       const datos = await respuesta.json();
 
       if (!respuesta.ok) {
+        // Si el backend responde 401, limpiar token viejo
+        if (respuesta.status === 401 || respuesta.status === 403) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("usuario");
+        }
         return setMensaje(datos.mensaje || "Error al iniciar sesión");
       }
 
-      // Guardar solo si el backend responde correctamente
+      // Guardar token y usuario
       if (datos.token) {
         localStorage.setItem("token", datos.token);
       }
-
       if (datos.usuario) {
         localStorage.setItem("usuario", JSON.stringify(datos.usuario));
       }

@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Container,
-  Card,
-  ListGroup,
-  Spinner,
-  Button,
-  Alert,
-  Badge
-} from "react-bootstrap";
+import { Container, Card, ListGroup, Spinner, Alert, Button } from "react-bootstrap";
 import axios from "axios";
 
 const ContenidoCurso = () => {
@@ -18,7 +10,6 @@ const ContenidoCurso = () => {
   const [curso, setCurso] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [comprado, setComprado] = useState(false);
-  const [progreso, setProgreso] = useState([]);
 
   useEffect(() => {
     const obtenerDatos = async () => {
@@ -26,39 +17,21 @@ const ContenidoCurso = () => {
         setCargando(true);
 
         // 1️⃣ Obtener información del curso
-        const cursoRes = await axios.get(
-          `http://localhost:5000/api/cursos/${id}`
-        );
+        const cursoRes = await axios.get(`http://localhost:5000/api/cursos/${id}`);
         setCurso(cursoRes.data);
 
         const token = localStorage.getItem("token");
 
         // 2️⃣ Verificar si el usuario compró el curso
         const comprasRes = await axios.get(
-          "http://localhost:5000/api/ordenes/mis-cursos",
+          "http://localhost:5000/api/pedidos/mis-cursos",
           {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
 
         const yaComprado = comprasRes.data.some((c) => c._id === id);
         setComprado(yaComprado);
-
-        // 3️⃣ Obtener progreso del usuario en este curso
-        const progresoRes = await axios.get(
-          `http://localhost:5000/api/progreso/curso/${id}`,
-          {
-            headers: { Authorization: `Bearer ${token}` }
-          }
-        );
-
-        // Adaptado a la estructura en español
-        setProgreso([
-          {
-            cursoId: id,
-            leccionesCompletadas: progresoRes.data.leccionesCompletadas
-          }
-        ]);
 
       } catch (err) {
         console.error("Error al obtener datos:", err);
@@ -69,14 +42,6 @@ const ContenidoCurso = () => {
 
     obtenerDatos();
   }, [id]);
-
-  // Función que obtiene las lecciones completadas del usuario
-  const obtenerLeccionesCompletadas = () => {
-    const registro = progreso.find((p) => p.cursoId === id);
-    return registro ? registro.leccionesCompletadas : [];
-  };
-
-  const leccionesCompletadas = obtenerLeccionesCompletadas();
 
   if (cargando || !curso)
     return (
@@ -89,16 +54,12 @@ const ContenidoCurso = () => {
     <Container className="py-5">
       <h2 className="fw-bold text-center mb-4">{curso.titulo}</h2>
 
-      {/* Mensaje si el usuario NO compró el curso */}
       {!comprado && (
         <Alert variant="warning" className="text-center">
           🔒 <strong>No has adquirido este curso.</strong>
-          <br />
-          Puedes ver los módulos, pero el contenido está bloqueado.
         </Alert>
       )}
 
-      {/* Si el curso no tiene contenido */}
       {curso.contenido.length === 0 ? (
         <p className="text-center">Este curso aún no tiene contenido.</p>
       ) : (
@@ -107,45 +68,30 @@ const ContenidoCurso = () => {
             <Card.Header className="fw-bold">📘 {modulo.modulo}</Card.Header>
 
             <ListGroup variant="flush">
-              {modulo.lecciones.map((leccion, indiceLeccion) => {
-                const estaCompletada = leccionesCompletadas.includes(
-                  leccion._id
-                );
+              {modulo.lecciones.map((leccion, indiceLeccion) => (
+                <ListGroup.Item
+                  key={leccion._id}
+                  className="d-flex justify-content-between align-items-center"
+                >
+                  <span>📖 {leccion.tituloLeccion}</span>
 
-                return (
-                  <ListGroup.Item
-                    key={leccion._id}
-                    className="d-flex justify-content-between align-items-center"
-                  >
-                    <span>
-                      📖 {leccion.tituloLeccion}{" "}
-                      {estaCompletada && (
-                        <Badge bg="success">Completada ✔</Badge>
-                      )}
-                    </span>
-
-                    {/* Si el usuario sí compró el curso */}
-                    {comprado ? (
-                      <Button
-                        size="sm"
-                        variant="dark"
-                        onClick={() =>
-                          navigate(
-                            `/curso/${id}/leccion/${indiceLeccion}`,
-                            {
-                              state: { leccion }
-                            }
-                          )
-                        }
-                      >
-                        Ver lección
-                      </Button>
-                    ) : (
-                      <span style={{ color: "#999" }}>🔒 Bloqueado</span>
-                    )}
-                  </ListGroup.Item>
-                );
-              })}
+                  {comprado ? (
+                    <Button
+                      size="sm"
+                      variant="dark"
+                      onClick={() =>
+                        navigate(`/curso/${id}/leccion/${indiceLeccion}`, {
+                          state: { leccion },
+                        })
+                      }
+                    >
+                      Ver lección
+                    </Button>
+                  ) : (
+                    <span style={{ color: "#999" }}>🔒 Bloqueado</span>
+                  )}
+                </ListGroup.Item>
+              ))}
             </ListGroup>
           </Card>
         ))
