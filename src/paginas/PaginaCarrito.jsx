@@ -8,15 +8,24 @@ const PaginaCarrito = () => {
   const { carrito, eliminarDelCarrito, vaciarCarrito } = useContext(ContextoCarrito);
   const [exito, setExito] = useState(false);
   const [error, setError] = useState(false);
-  const [mensajeSesion, setMensajeSesion] = useState(""); // ⚠️ Mensaje de sesión expirada
+  const [mensajeSesion, setMensajeSesion] = useState("");
   const navigate = useNavigate();
 
   const total = carrito.reduce((acc, curso) => acc + curso.precio, 0);
 
+  // Función para formatear precios a pesos colombianos
+  const formatearPrecio = (valor) => {
+  return new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(valor);
+};
+
   const procesarCompra = async () => {
     const token = localStorage.getItem("token");
 
-    // Validar token antes de procesar la compra
     if (!token) {
       setMensajeSesion("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
       vaciarCarrito();
@@ -26,7 +35,6 @@ const PaginaCarrito = () => {
     const cursos = carrito.map((c) => c._id);
 
     try {
-      // Envío correcto del token y tipo de contenido
       await axios.post(
         "http://localhost:5000/api/pedidos/crear",
         { cursos, total },
@@ -47,7 +55,6 @@ const PaginaCarrito = () => {
     } catch (err) {
       console.error("Error al procesar la compra:", err.response || err);
 
-      // Manejar token inválido o expirado
       if (err.response && (err.response.status === 401 || err.response.status === 403)) {
         setMensajeSesion("Tu sesión ha expirado o el token es inválido. Inicia sesión nuevamente.");
         localStorage.removeItem("token");
@@ -114,7 +121,7 @@ const PaginaCarrito = () => {
                     <Card.Title>{curso.titulo}</Card.Title>
                     <Card.Text>{curso.descripcion}</Card.Text>
                     <p>
-                      <strong>Precio:</strong> ${curso.precio}
+                      <strong>Precio:</strong> {formatearPrecio(curso.precio)}
                     </p>
                     <Button
                       variant="outline-danger"
@@ -131,7 +138,7 @@ const PaginaCarrito = () => {
 
           {!exito && (
             <div className="text-center mt-4">
-              <h4>Total: ${total}</h4>
+              <h4>Total: {formatearPrecio(total)}</h4>
               <Button variant="secondary" className="me-2" onClick={vaciarCarrito}>
                 Vaciar carrito
               </Button>
