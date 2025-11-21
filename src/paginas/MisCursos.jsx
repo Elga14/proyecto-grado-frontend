@@ -11,13 +11,11 @@ const MisCursos = () => {
     const cargarCursosComprados = async () => {
       try {
         const token = localStorage.getItem("token");
+        if (!token) return;
 
-        // 1️⃣ Obtener cursos comprados del usuario
         const respuesta = await axios.get(
           "http://localhost:5000/api/pedidos/mis-cursos",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         setCursos(respuesta.data);
@@ -45,10 +43,8 @@ const MisCursos = () => {
               src={curso.imagenPortada || "https://via.placeholder.com/300"}
               style={{ height: "180px", objectFit: "cover" }}
             />
-
             <Card.Body>
               <Card.Title>{curso.titulo}</Card.Title>
-
               <Button
                 variant="dark"
                 className="w-100 mt-3"

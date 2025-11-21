@@ -47,7 +47,8 @@ function Inicio() {
           <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {cursos.map((curso) => (
               <div className="col" key={curso._id}>
-                <TarjetaCurso curso={curso} />
+                {/* Ajuste: pasamos el campo imagenPortada */}
+                <TarjetaCurso curso={{ ...curso, imagen: curso.imagenPortada }} />
               </div>
             ))}
           </div>

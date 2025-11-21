@@ -16,18 +16,17 @@ const ContenidoCurso = () => {
       try {
         setCargando(true);
 
-        // 1️⃣ Obtener información del curso
+        // Obtener información del curso
         const cursoRes = await axios.get(`http://localhost:5000/api/cursos/${id}`);
         setCurso(cursoRes.data);
 
         const token = localStorage.getItem("token");
+        if (!token) return;
 
-        // 2️⃣ Verificar si el usuario compró el curso
+        // Verificar si el usuario compró el curso
         const comprasRes = await axios.get(
           "http://localhost:5000/api/pedidos/mis-cursos",
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         const yaComprado = comprasRes.data.some((c) => c._id === id);
@@ -66,7 +65,6 @@ const ContenidoCurso = () => {
         curso.contenido.map((modulo, indiceModulo) => (
           <Card key={indiceModulo} className="mb-4 shadow-sm">
             <Card.Header className="fw-bold">📘 {modulo.modulo}</Card.Header>
-
             <ListGroup variant="flush">
               {modulo.lecciones.map((leccion, indiceLeccion) => (
                 <ListGroup.Item
@@ -74,14 +72,13 @@ const ContenidoCurso = () => {
                   className="d-flex justify-content-between align-items-center"
                 >
                   <span>📖 {leccion.tituloLeccion}</span>
-
                   {comprado ? (
                     <Button
                       size="sm"
                       variant="dark"
                       onClick={() =>
                         navigate(`/curso/${id}/leccion/${indiceLeccion}`, {
-                          state: { leccion },
+                          state: { leccion }, // ✅ coincide con VerLeccion.jsx
                         })
                       }
                     >

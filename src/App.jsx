@@ -11,7 +11,8 @@ import AdministradorContenidoCurso from "./paginas/AdministradorContenidoCurso";
 import EditarLeccion from "./paginas/EditarLeccion";
 import MisCursos from "./paginas/MisCursos";
 import ContenidoCurso from "./paginas/ContenidoCurso";
-import PaginaCarrito from "./paginas/PaginaCarrito.jsx"; // página carrito
+import VerLeccion from "./paginas/VerLeccion";
+import PaginaCarrito from "./paginas/PaginaCarrito.jsx";
 
 function AppWrapper() {
   return (
@@ -52,10 +53,11 @@ function App() {
         <Route path="/inicio" element={estaAutenticado() ? <Inicio /> : <Navigate to="/iniciar-sesion" />} />
         <Route path="/mis-cursos" element={estaAutenticado() ? <MisCursos /> : <Navigate to="/iniciar-sesion" />} />
         <Route path="/curso/:id/contenido" element={estaAutenticado() ? <ContenidoCurso /> : <Navigate to="/iniciar-sesion" />} />
+        <Route path="/curso/:id/leccion/:leccionId" element={estaAutenticado() ? <VerLeccion /> : <Navigate to="/iniciar-sesion" />} />
         <Route path="/carrito" element={estaAutenticado() ? <PaginaCarrito /> : <Navigate to="/iniciar-sesion" />} />
         <Route path="/admin" element={estaAutenticado() && rol === "admin" ? <PanelAdministrador /> : <Navigate to="/inicio" />} />
-        <Route path="/admin/curso-contenido/:cursoId" element={<AdministradorContenidoCurso />} />
-        <Route path="/admin/curso/:id/mod/:modIndex/leccion/:lecIndex" element={<EditarLeccion />} />
+        <Route path="/admin/curso-contenido/:cursoId" element={estaAutenticado() && rol === "admin" ? <AdministradorContenidoCurso /> : <Navigate to="/inicio" />} />
+        <Route path="/admin/curso/:id/mod/:modIndex/leccion/:lecIndex" element={estaAutenticado() && rol === "admin" ? <EditarLeccion /> : <Navigate to="/inicio" />} />
         <Route path="/curso/:id" element={<DetallesCurso />} />
         <Route path="*" element={<Navigate to="/iniciar-sesion" />} />
       </Routes>
