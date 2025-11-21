@@ -2,20 +2,18 @@
  * TarjetaCurso.jsx
  *
  * Tarjeta visual para mostrar los cursos al usuario en el inicio.
- * Solo visualización: imagen, título, descripción y precio.
- * Para más información se podría añadir un botón "Ver curso" luego.
+ * Todo en español, manteniendo la lógica.
  */
 
 import React from "react";
 import { Card, Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-
 function TarjetaCurso({ curso }) {
-  
+
   const navigate = useNavigate();
 
-  // Formatear precio como pesos colombianos (COP)
+  // Formatear precio en pesos colombianos
   const formatoPesos = (valor) => {
     return new Intl.NumberFormat("es-CO", {
       style: "currency",
@@ -24,9 +22,23 @@ function TarjetaCurso({ curso }) {
     }).format(valor);
   };
 
+  // 👉 Agregar al carrito (guardado en localStorage)
+  const agregarCarrito = () => {
+    let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+
+    // Evitar duplicados
+    const existe = carrito.find(item => item._id === curso._id);
+    if (!existe) {
+      carrito.push(curso);
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+      alert("Curso agregado al carrito ✔️");
+    } else {
+      alert("Este curso ya está en el carrito.");
+    }
+  };
+
   return (
     <Card className="shadow-sm h-100">
-      {/* Imagen del curso */}
       {curso.imagen ? (
         <Card.Img
           variant="top"
@@ -59,10 +71,16 @@ function TarjetaCurso({ curso }) {
         <div className="d-flex justify-content-between align-items-center">
           <h6 className="fw-bold">{formatoPesos(curso.precio)}</h6>
 
-          <Button variant="dark" onClick={() => navigate(`/curso/${curso._id}`)}>
-  Ver curso
-</Button>
+          <div className="d-flex gap-2">
+            <Button variant="dark" onClick={() => navigate(`/curso/${curso._id}`)}>
+              Ver curso
+            </Button>
 
+            {/* 👉 Botón Agregar al carrito */}
+            <Button variant="success" onClick={agregarCarrito}>
+              Agregar
+            </Button>
+          </div>
         </div>
       </Card.Body>
     </Card>

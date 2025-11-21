@@ -6,6 +6,7 @@ import {
   ListGroup,
   Spinner,
   Button,
+  Alert,
   Badge
 } from "react-bootstrap";
 import axios from "axios";
@@ -16,8 +17,7 @@ const ContenidoCurso = () => {
 
   const [curso, setCurso] = useState(null);
   const [cargando, setCargando] = useState(true);
-
-
+  const [comprado, setComprado] = useState(false);
   const [progreso, setProgreso] = useState([]);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const ContenidoCurso = () => {
       try {
         setCargando(true);
 
-        // Obtener información del curso
+        // 1️⃣ Obtener información del curso
         const cursoRes = await axios.get(
           `http://localhost:5000/api/cursos/${id}`
         );
@@ -33,7 +33,18 @@ const ContenidoCurso = () => {
 
         const token = localStorage.getItem("token");
 
-        // Obtener progreso del usuario
+        // 2️⃣ Verificar si el usuario compró el curso
+        const comprasRes = await axios.get(
+          "http://localhost:5000/api/ordenes/mis-cursos",
+          {
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        );
+
+        const yaComprado = comprasRes.data.some((c) => c._id === id);
+        setComprado(yaComprado);
+
+        // 3️⃣ Obtener progreso del usuario en este curso
         const progresoRes = await axios.get(
           `http://localhost:5000/api/progreso/curso/${id}`,
           {
@@ -41,6 +52,7 @@ const ContenidoCurso = () => {
           }
         );
 
+        // Adaptado a la estructura en español
         setProgreso([
           {
             cursoId: id,
@@ -58,6 +70,7 @@ const ContenidoCurso = () => {
     obtenerDatos();
   }, [id]);
 
+  // Función que obtiene las lecciones completadas del usuario
   const obtenerLeccionesCompletadas = () => {
     const registro = progreso.find((p) => p.cursoId === id);
     return registro ? registro.leccionesCompletadas : [];
@@ -76,8 +89,16 @@ const ContenidoCurso = () => {
     <Container className="py-5">
       <h2 className="fw-bold text-center mb-4">{curso.titulo}</h2>
 
-      {/* 🚫 Quitamos el aviso de "no comprado" */}
+      {/* Mensaje si el usuario NO compró el curso */}
+      {!comprado && (
+        <Alert variant="warning" className="text-center">
+          🔒 <strong>No has adquirido este curso.</strong>
+          <br />
+          Puedes ver los módulos, pero el contenido está bloqueado.
+        </Alert>
+      )}
 
+      {/* Si el curso no tiene contenido */}
       {curso.contenido.length === 0 ? (
         <p className="text-center">Este curso aún no tiene contenido.</p>
       ) : (
@@ -103,18 +124,25 @@ const ContenidoCurso = () => {
                       )}
                     </span>
 
-                    {/* 🔓 Siempre permitir ver la lección */}
-                    <Button
-                      size="sm"
-                      variant="dark"
-                      onClick={() =>
-                        navigate(`/curso/${id}/leccion/${indiceLeccion}`, {
-                          state: { leccion }
-                        })
-                      }
-                    >
-                      Ver lección
-                    </Button>
+                    {/* Si el usuario sí compró el curso */}
+                    {comprado ? (
+                      <Button
+                        size="sm"
+                        variant="dark"
+                        onClick={() =>
+                          navigate(
+                            `/curso/${id}/leccion/${indiceLeccion}`,
+                            {
+                              state: { leccion }
+                            }
+                          )
+                        }
+                      >
+                        Ver lección
+                      </Button>
+                    ) : (
+                      <span style={{ color: "#999" }}>🔒 Bloqueado</span>
+                    )}
                   </ListGroup.Item>
                 );
               })}
