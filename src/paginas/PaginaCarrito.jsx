@@ -69,7 +69,7 @@ const PaginaCarrito = () => {
 
   return (
     <Container className="py-5">
-      <h2 className="text-center mb-4">🛒 Carrito de Compras</h2>
+      <h2 className="text-center mb-4">Carrito de Compras</h2>
 
       {mensajeSesion && (
         <Alert variant="warning" className="text-center">

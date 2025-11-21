@@ -29,7 +29,7 @@ const MisCursos = () => {
 
   return (
     <Container className="mt-4">
-      <h2 className="fw-bold mb-4">📘 Mis Cursos</h2>
+      <h2 className="fw-bold mb-4"> Mis Cursos</h2>
 
       {cursos.length === 0 && (
         <p className="text-center">Aún no has comprado ningún curso.</p>

@@ -35,9 +35,7 @@ const PanelAdministrador = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  // ==========================================
   // Obtener todos los cursos
-  // ==========================================
   const obtenerCursos = async () => {
     try {
       const respuesta = await axios.get("http://localhost:5000/api/cursos");
@@ -50,9 +48,9 @@ const PanelAdministrador = () => {
     }
   };
 
-  // ==========================================
+ 
   // Crear curso
-  // ==========================================
+  
   const crearCurso = async () => {
     try {
       await axios.post(
@@ -88,9 +86,9 @@ const PanelAdministrador = () => {
     }
   };
 
-  // ==========================================
+  
   // Editar curso
-  // ==========================================
+  
   const editarCurso = async () => {
     try {
       await axios.put(
@@ -116,9 +114,9 @@ const PanelAdministrador = () => {
     }
   };
 
-  // ==========================================
+  
   // Eliminar curso
-  // ==========================================
+  
   const eliminarCurso = async (id) => {
     if (!window.confirm("¿Seguro que deseas eliminar este curso?")) return;
     try {
@@ -141,9 +139,9 @@ const PanelAdministrador = () => {
     }
   };
 
-  // ==========================================
+  
   // Cargar cursos al iniciar
-  // ==========================================
+  
   useEffect(() => {
     obtenerCursos();
   }, []);
@@ -152,7 +150,7 @@ const PanelAdministrador = () => {
     <div style={{ minHeight: "100vh", backgroundColor: "#f5f5f5", paddingTop: "40px" }}>
       <Container>
         <Card className="p-4 shadow-lg border-0" style={{ borderRadius: "15px", backgroundColor: "#fff" }}>
-          <h2 className="text-center mb-4 fw-bold text-dark">🧑‍💼 Panel de Administración</h2>
+          <h2 className="text-center mb-4 fw-bold text-dark">Panel de Administración</h2>
           <p className="text-center text-secondary mb-4">
             Gestiona los cursos disponibles en la plataforma.
           </p>

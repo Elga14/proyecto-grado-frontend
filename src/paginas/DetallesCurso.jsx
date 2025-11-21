@@ -105,12 +105,7 @@ const DetallesCurso = () => {
             </div>
           </div>
 
-          {curso.instructor && (
-            <div className="alert alert-info" role="alert">
-              <strong>Instructor:</strong> {curso.instructor.nombre} ({curso.instructor.email})
-            </div>
-          )}
-
+ 
           <div className="d-grid gap-2">
             <button
               className="btn btn-dark btn-lg"

@@ -64,14 +64,14 @@ const ContenidoCurso = () => {
       ) : (
         curso.contenido.map((modulo, indiceModulo) => (
           <Card key={indiceModulo} className="mb-4 shadow-sm">
-            <Card.Header className="fw-bold">📘 {modulo.modulo}</Card.Header>
+            <Card.Header className="fw-bold"> {modulo.modulo}</Card.Header>
             <ListGroup variant="flush">
               {modulo.lecciones.map((leccion, indiceLeccion) => (
                 <ListGroup.Item
                   key={leccion._id}
                   className="d-flex justify-content-between align-items-center"
                 >
-                  <span>📖 {leccion.tituloLeccion}</span>
+                  <span> {leccion.tituloLeccion}</span>
                   {comprado ? (
                     <Button
                       size="sm"
