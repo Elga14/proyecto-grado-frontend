@@ -72,7 +72,7 @@ const PanelAdministrador = () => {
         imagenPortada: "",
         contenido: [],
       });
-      setMensajeToast("✅ Curso creado exitosamente");
+      setMensajeToast("Curso creado exitosamente");
       setTipoToast("success");
       setMostrarToast(true);
       obtenerCursos();
@@ -100,7 +100,7 @@ const PanelAdministrador = () => {
       );
       setMostrarModalEditar(false);
       setCursoSeleccionado(null);
-      setMensajeToast("✅ Curso actualizado correctamente");
+      setMensajeToast("Curso actualizado correctamente");
       setTipoToast("success");
       setMostrarToast(true);
       obtenerCursos();
@@ -125,7 +125,7 @@ const PanelAdministrador = () => {
       await axios.delete(`http://localhost:5000/api/cursos/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setMensajeToast("✅ Curso eliminado correctamente");
+      setMensajeToast("Curso eliminado correctamente");
       setTipoToast("success");
       setMostrarToast(true);
       obtenerCursos();
@@ -162,7 +162,7 @@ const PanelAdministrador = () => {
               Volver al inicio
             </Button>
             <Button variant="dark" onClick={() => setMostrarModalCrear(true)}>
-              ➕ Crear nuevo curso
+               Crear nuevo curso
             </Button>
           </div>
 

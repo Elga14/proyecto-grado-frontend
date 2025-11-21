@@ -21,7 +21,7 @@ const EditarLeccion = () => {
   const [leccion, setLeccion] = useState(null);
   const [cargando, setCargando] = useState(true);
 
-  // 1️⃣ Obtener curso y lección
+  // 1️ Obtener curso y lección
   useEffect(() => {
     const obtenerLeccion = async () => {
       try {
@@ -55,7 +55,7 @@ const EditarLeccion = () => {
       </Container>
     );
 
-  // 2️⃣ Guardar cambios
+  // 2️ Guardar cambios
   const guardarCambios = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -81,7 +81,7 @@ const EditarLeccion = () => {
     }
   };
 
-  // 3️⃣ Agregar pregunta al quiz
+  // 3️ Agregar pregunta al quiz
   const agregarPregunta = () => {
     const nuevaPregunta = {
       pregunta: "",
@@ -95,7 +95,7 @@ const EditarLeccion = () => {
     });
   };
 
-  // 4️⃣ Eliminar pregunta
+  // 4️ Eliminar pregunta
   const eliminarPregunta = (index) => {
     const actualizadas = [...leccion.preguntas];
     actualizadas.splice(index, 1);
@@ -111,7 +111,7 @@ const EditarLeccion = () => {
 
       <Card className="shadow">
         <Card.Body>
-          <h2 className="fw-bold mb-4">✏️ Editar lección</h2>
+          <h2 className="fw-bold mb-4">Editar lección</h2>
 
           {/* Título */}
           <Form.Group className="mb-3">
@@ -213,7 +213,7 @@ const EditarLeccion = () => {
               <h5 className="fw-bold">❓ Preguntas del cuestionario</h5>
 
               <Button variant="dark" className="mb-3" onClick={agregarPregunta}>
-                ➕ Agregar pregunta
+                 Agregar pregunta
               </Button>
 
               <ListGroup>
@@ -275,7 +275,7 @@ const EditarLeccion = () => {
                       className="mt-3"
                       onClick={() => eliminarPregunta(qIndex)}
                     >
-                      🗑️ Eliminar pregunta
+                     Eliminar pregunta
                     </Button>
                   </ListGroup.Item>
                 ))}
@@ -289,7 +289,7 @@ const EditarLeccion = () => {
             className="mt-4 w-100"
             onClick={guardarCambios}
           >
-            💾 Guardar cambios
+           Guardar cambios
           </Button>
         </Card.Body>
       </Card>

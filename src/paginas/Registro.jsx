@@ -24,7 +24,7 @@ function Registro() {
       );
 
       if (respuesta.status === 201) {
-        setMensaje("✅ Registro exitoso. Ahora inicia sesión.");
+        setMensaje("Registro exitoso. Ahora inicia sesión.");
         setTimeout(() => {
           setCargando(false);
           navegar("/iniciar-sesion");

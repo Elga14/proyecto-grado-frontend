@@ -21,7 +21,7 @@ const AdministradorContenidoCurso = () => {
   const navigate = useNavigate();
   const { cursoId } = useParams();
 
-  // 1️⃣ Cargar cursos
+  // 1 Cargar cursos
   useEffect(() => {
     const cargarCursos = async () => {
       try {
@@ -46,7 +46,7 @@ const AdministradorContenidoCurso = () => {
     cargarCursos();
   }, [cursoId, token, navigate]);
 
-  // 2️⃣ Guardar curso
+  // 2 Guardar curso
   const guardarCurso = async (cursoData) => {
     try {
       const res = await axios.put(
@@ -66,7 +66,7 @@ const AdministradorContenidoCurso = () => {
     }
   };
 
-  // 3️⃣ Agregar módulo
+  // 3️ Agregar módulo
   const agregarModulo = async () => {
     if (!nuevoModulo.trim()) return;
     const cursoActualizado = {
@@ -80,7 +80,7 @@ const AdministradorContenidoCurso = () => {
     setNuevoModulo("");
   };
 
-  // 4️⃣ Eliminar módulo
+  // 4️ Eliminar módulo
   const eliminarModulo = async (indice) => {
     if (!window.confirm("¿Eliminar este módulo completo?")) return;
     const cursoActualizado = { ...cursoSeleccionado };
@@ -88,7 +88,7 @@ const AdministradorContenidoCurso = () => {
     await guardarCurso(cursoActualizado);
   };
 
-  // 5️⃣ Agregar lección
+  // 5️ Agregar lección
   const agregarLeccion = async () => {
     const i = nuevaLeccion.indiceModulo;
     if (i === null) return;
@@ -113,7 +113,7 @@ const AdministradorContenidoCurso = () => {
     });
   };
 
-  // 6️⃣ Eliminar lección
+  // 6️ Eliminar lección
   const eliminarLeccion = async (indiceModulo, indiceLeccion) => {
     if (!window.confirm("¿Eliminar esta lección?")) return;
     const cursoActualizado = { ...cursoSeleccionado };
@@ -149,7 +149,7 @@ const AdministradorContenidoCurso = () => {
               onChange={(e) => setNuevoModulo(e.target.value)}
             />
             <Button className="mt-3" variant="dark" onClick={agregarModulo}>
-              ➕ Agregar módulo
+               Agregar módulo
             </Button>
           </Card>
 
@@ -167,7 +167,7 @@ const AdministradorContenidoCurso = () => {
                       setMostrarModal(true);
                     }}
                   >
-                    ➕ Lección
+                     Lección
                   </Button>
                   <Button size="sm" variant="outline-danger" onClick={() => eliminarModulo(iModulo)}>
                     Eliminar módulo
@@ -182,7 +182,7 @@ const AdministradorContenidoCurso = () => {
                     className="d-flex justify-content-between align-items-center"
                   >
                     <div>
-                      📖 <strong>{l.titulo}</strong> — <em>{l.tipo}</em>
+                       <strong>{l.titulo}</strong> — <em>{l.tipo}</em>
                     </div>
                     <div>
                       <Button

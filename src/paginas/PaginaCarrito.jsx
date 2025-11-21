@@ -143,7 +143,7 @@ const PaginaCarrito = () => {
                 Vaciar carrito
               </Button>
               <Button variant="dark" onClick={procesarCompra}>
-                Proceder al pago 💳
+                Proceder al pago
               </Button>
             </div>
           )}

@@ -78,7 +78,7 @@ const ContenidoCurso = () => {
                       variant="dark"
                       onClick={() =>
                         navigate(`/curso/${id}/leccion/${indiceLeccion}`, {
-                          state: { leccion }, // ✅ coincide con VerLeccion.jsx
+                          state: { leccion }, //  coincide con VerLeccion.jsx
                         })
                       }
                     >

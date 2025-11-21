@@ -31,7 +31,7 @@ function BarraNavegacion({ rol }) {
               <>
                 <Nav.Link href="/mis-cursos">Mis Cursos</Nav.Link>
                 <Nav.Link href="/carrito" style={{ position: "relative" }}>
-                  🛒 Carrito
+                  🛒 
                   {carrito.length > 0 && (
                     <Badge
                       bg="danger"
