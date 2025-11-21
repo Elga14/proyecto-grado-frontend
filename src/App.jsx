@@ -8,6 +8,10 @@ import DetallesCurso from "./paginas/DetallesCurso";
 import AdministradorCursoContenido from "./paginas/AdministradorContenidoCurso";
 import EditarLeccion from "./paginas/EditarLeccion";
 
+// 🆕 Importar las nuevas páginas
+import MisCursos from "./paginas/MisCursos";
+import ContenidoCurso from "./paginas/ContenidoCurso";
+
 // Envoltorio necesario para permitir useLocation()
 function AppWrapper() {
   return (
@@ -23,7 +27,7 @@ function App() {
   // ------------------------------------------
   // Verificar si el usuario está autenticado
   // ------------------------------------------
-  const isAuthenticated = () => localStorage.getItem("token") !== null;
+  const estaAutenticado = () => localStorage.getItem("token") !== null;
 
   // ------------------------------------------
   // Obtener el rol desde el token guardado
@@ -50,7 +54,7 @@ function App() {
 
   return (
     <>
-      {isAuthenticated() && !ocultarBarra && <BarraNavegacion rol={rol} />}
+      {estaAutenticado() && !ocultarBarra && <BarraNavegacion rol={rol} />}
 
       <Routes>
         <Route path="/iniciar-sesion" element={<IniciarSesion />} />
@@ -58,13 +62,25 @@ function App() {
 
         <Route
           path="/inicio"
-          element={isAuthenticated() ? <Inicio /> : <Navigate to="/iniciar-sesion" />}
+          element={estaAutenticado() ? <Inicio /> : <Navigate to="/iniciar-sesion" />}
+        />
+
+        {/* 🆕 Mis cursos */}
+        <Route
+          path="/mis-cursos"
+          element={estaAutenticado() ? <MisCursos /> : <Navigate to="/iniciar-sesion" />}
+        />
+
+        {/* 🆕 Contenido del curso */}
+        <Route
+          path="/curso/:id/contenido"
+          element={estaAutenticado() ? <ContenidoCurso /> : <Navigate to="/iniciar-sesion" />}
         />
 
         <Route
           path="/admin"
           element={
-            isAuthenticated() && rol === "admin"
+            estaAutenticado() && rol === "admin"
               ? <PanelAdministrador />
               : <Navigate to="/inicio" />
           }
@@ -72,7 +88,7 @@ function App() {
 
         <Route path="/admin/curso-contenido/:cursoId" element={<AdministradorCursoContenido />} />
 
-         {/* ⚡ RUTA QUE FALTABA PARA EDITAR UNA LECCIÓN */}
+        {/* ⚡ Ruta para editar lección */}
         <Route
           path="/admin/curso/:id/mod/:modIndex/leccion/:lecIndex"
           element={<EditarLeccion />}
