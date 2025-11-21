@@ -10,13 +10,21 @@ const DetallesCurso = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
 
+  // Formato de moneda colombiana
+  const formatearCOP = (valor) => {
+    return new Intl.NumberFormat("es-CO", {
+      style: "currency",
+      currency: "COP",
+      minimumFractionDigits: 0
+    }).format(valor);
+  };
+
   useEffect(() => {
     const obtenerCurso = async () => {
       try {
         setCargando(true);
         setError(null);
 
-        // Obtener información del curso desde el backend
         const respuesta = await axios.get(`http://localhost:5000/api/cursos/${id}`);
         setCurso(respuesta.data);
 
@@ -31,7 +39,6 @@ const DetallesCurso = () => {
     obtenerCurso();
   }, [id]);
 
-  // Mostrar spinner mientras carga
   if (cargando) {
     return (
       <div className="container d-flex justify-content-center align-items-center" style={{ height: "60vh" }}>
@@ -42,7 +49,6 @@ const DetallesCurso = () => {
     );
   }
 
-  // Mostrar error si ocurre
   if (error) {
     return (
       <div className="container text-center mt-5">
@@ -56,7 +62,6 @@ const DetallesCurso = () => {
     );
   }
 
-  // Mostrar mensaje si no se encuentra el curso
   if (!curso) {
     return (
       <div className="container text-center mt-5">
@@ -72,7 +77,6 @@ const DetallesCurso = () => {
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh", paddingTop: "2rem", paddingBottom: "2rem" }}>
       <div className="card p-4 shadow" style={{ maxWidth: "700px", width: "100%", borderRadius: "15px" }}>
         
-        {/* Imagen del curso */}
         <img
           src={curso.imagenPortada || "https://via.placeholder.com/600x400?text=Sin+imagen"}
           alt={curso.titulo}
@@ -86,13 +90,10 @@ const DetallesCurso = () => {
         />
 
         <div className="card-body">
-          {/* Título del curso */}
           <h2 className="card-title fw-bold text-center mb-3">{curso.titulo}</h2>
-          
-          {/* Descripción */}
+
           <p className="card-text text-muted mb-4">{curso.descripcion}</p>
 
-          {/* Información del curso */}
           <div className="row mb-4">
             <div className="col-md-6">
               <p><strong>Categoría:</strong> {curso.categoria}</p>
@@ -100,18 +101,16 @@ const DetallesCurso = () => {
             </div>
             <div className="col-md-6">
               <p><strong>Duración:</strong> {curso.duracion}</p>
-              <p><strong>Precio:</strong> ${curso.precio}</p>
+              <p><strong>Precio:</strong> {formatearCOP(curso.precio)}</p>
             </div>
           </div>
 
-          {/* Información del instructor si existe */}
           {curso.instructor && (
             <div className="alert alert-info" role="alert">
               <strong>Instructor:</strong> {curso.instructor.nombre} ({curso.instructor.email})
             </div>
           )}
 
-          {/* Botones de acción */}
           <div className="d-grid gap-2">
             <button
               className="btn btn-dark btn-lg"
