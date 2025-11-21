@@ -6,6 +6,7 @@ import BarraNavegacion from "./componentes/BarraNavegacion";
 import PanelAdministrador from "./paginas/PanelAdministrador";
 import DetallesCurso from "./paginas/DetallesCurso";
 import AdministradorCursoContenido from "./paginas/AdministradorContenidoCurso";
+import EditarLeccion from "./paginas/EditarLeccion";
 
 // Envoltorio necesario para permitir useLocation()
 function AppWrapper() {
@@ -70,6 +71,12 @@ function App() {
         />
 
         <Route path="/admin/curso-contenido/:cursoId" element={<AdministradorCursoContenido />} />
+
+         {/* ⚡ RUTA QUE FALTABA PARA EDITAR UNA LECCIÓN */}
+        <Route
+          path="/admin/curso/:id/mod/:modIndex/leccion/:lecIndex"
+          element={<EditarLeccion />}
+        />
 
         <Route path="/curso/:id" element={<DetallesCurso />} />
 

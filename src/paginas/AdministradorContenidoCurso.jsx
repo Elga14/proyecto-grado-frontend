@@ -19,9 +19,9 @@ const AdministradorContenidoCurso = () => {
 
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
-  const { cursoId } = useParams(); // ⚡ usamos params en vez de query string
+  const { cursoId } = useParams();
 
-  // 1️ argar cursos al iniciar
+  // 1️⃣ Cargar cursos
   useEffect(() => {
     const cargarCursos = async () => {
       try {
@@ -37,16 +37,16 @@ const AdministradorContenidoCurso = () => {
       } catch (error) {
         console.error("Error al cargar cursos:", error);
         if (error.response?.status === 403) {
-          alert("❌ No tienes permisos o tu sesión expiró. Por favor inicia sesión de nuevo.");
+          alert("❌ Tu sesión expiró. Vuelve a iniciar sesión.");
           localStorage.removeItem("token");
-          navigate("/iniciar-sesion"); // ⚡ ruta coherente en español
+          navigate("/iniciar-sesion");
         }
       }
     };
     cargarCursos();
   }, [cursoId, token, navigate]);
 
-  // 2️ uardar cambios en el curso
+  // 2️⃣ Guardar curso
   const guardarCurso = async (cursoData) => {
     try {
       const res = await axios.put(
@@ -58,15 +58,15 @@ const AdministradorContenidoCurso = () => {
       setCursos(prev => prev.map(c => c._id === res.data.curso._id ? res.data.curso : c));
     } catch (error) {
       console.error("Error al guardar curso:", error);
-      alert("No se pudo guardar el curso. Verifica permisos o token.");
+      alert("No se pudo guardar el curso.");
       if (error.response?.status === 403) {
         localStorage.removeItem("token");
-        navigate("/iniciar-sesion"); // ⚡ ruta coherente en español
+        navigate("/iniciar-sesion");
       }
     }
   };
 
-  // 3️ gregar módulo
+  // 3️⃣ Agregar módulo
   const agregarModulo = async () => {
     if (!nuevoModulo.trim()) return;
     const cursoActualizado = {
@@ -80,7 +80,7 @@ const AdministradorContenidoCurso = () => {
     setNuevoModulo("");
   };
 
-  // 4️ liminar módulo
+  // 4️⃣ Eliminar módulo
   const eliminarModulo = async (indice) => {
     if (!window.confirm("¿Eliminar este módulo completo?")) return;
     const cursoActualizado = { ...cursoSeleccionado };
@@ -88,8 +88,7 @@ const AdministradorContenidoCurso = () => {
     await guardarCurso(cursoActualizado);
   };
 
-  // 5️ gregar lección
-
+  // 5️⃣ Agregar lección
   const agregarLeccion = async () => {
     const i = nuevaLeccion.indiceModulo;
     if (i === null) return;
@@ -114,7 +113,7 @@ const AdministradorContenidoCurso = () => {
     });
   };
 
-  // 6️ liminar lección
+  // 6️⃣ Eliminar lección
   const eliminarLeccion = async (indiceModulo, indiceLeccion) => {
     if (!window.confirm("¿Eliminar esta lección?")) return;
     const cursoActualizado = { ...cursoSeleccionado };
@@ -126,7 +125,6 @@ const AdministradorContenidoCurso = () => {
     <Container className="py-5">
       <h2 className="text-center">📚 Contenido del curso</h2>
 
-      {/* Selección de curso */}
       <Form.Select
         className="my-4"
         onChange={(e) => {
@@ -143,7 +141,6 @@ const AdministradorContenidoCurso = () => {
 
       {cursoSeleccionado && (
         <>
-          {/* Agregar módulo */}
           <Card className="p-4 mb-4 shadow-sm">
             <h4>Agregar módulo</h4>
             <Form.Control
@@ -156,7 +153,6 @@ const AdministradorContenidoCurso = () => {
             </Button>
           </Card>
 
-          {/* Lista de módulos y lecciones */}
           {cursoSeleccionado.contenido.map((mod, iModulo) => (
             <Card key={iModulo} className="mb-3 shadow-sm">
               <Card.Header className="d-flex justify-content-between align-items-center">
@@ -193,11 +189,18 @@ const AdministradorContenidoCurso = () => {
                         size="sm"
                         variant="outline-primary"
                         className="me-2"
-                        onClick={() => navigate(`/admin/curso/${cursoSeleccionado._id}/mod/${iModulo}/leccion/${iLeccion}`)}
+                        onClick={() =>
+                          navigate(`/admin/curso/${cursoSeleccionado._id}/mod/${iModulo}/leccion/${iLeccion}`)
+                        }
                       >
                         Editar
                       </Button>
-                      <Button size="sm" variant="outline-danger" onClick={() => eliminarLeccion(iModulo, iLeccion)}>
+
+                      <Button
+                        size="sm"
+                        variant="outline-danger"
+                        onClick={() => eliminarLeccion(iModulo, iLeccion)}
+                      >
                         Eliminar
                       </Button>
                     </div>
@@ -209,11 +212,11 @@ const AdministradorContenidoCurso = () => {
         </>
       )}
 
-      {/* Modal agregar lección */}
       <Modal show={mostrarModal} onHide={() => setMostrarModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Agregar nueva lección</Modal.Title>
         </Modal.Header>
+
         <Modal.Body>
           <Form>
             <Form.Group>
